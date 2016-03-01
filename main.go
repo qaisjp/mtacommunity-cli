@@ -11,6 +11,7 @@ import (
 	"regexp"
 )
 
+//--  f = io.popen("mta-communitycli check --file=meta.zip"); print(f:read("*all"))
 func main() {
 	app := cli.NewApp()
 	app.Name = "Community CLI"
@@ -39,6 +40,7 @@ var logger *log.Logger
 
 func checkResource(c *cli.Context) {
 	logger = log.New(os.Stderr, "error: ", 0)
+	logger.SetOutput(os.Stdout)
 	filepath := c.String("file")
 
 	if filepath == "" {
