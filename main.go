@@ -3,7 +3,6 @@ package main
 import (
 	"archive/zip"
 	"encoding/xml"
-	"fmt"
 	"github.com/codegangsta/cli"
 	"io"
 	"log"
@@ -47,7 +46,6 @@ func checkResource(c *cli.Context) {
 	}
 
 	filepath = fpath.Clean(filepath)
-	fmt.Printf("Checking file: %s\n", filepath)
 
 	fileInfo, err := os.Stat(filepath)
 	if err != nil {
