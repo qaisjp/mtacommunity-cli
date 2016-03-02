@@ -3,6 +3,7 @@ package main
 import (
 	"archive/zip"
 	"encoding/xml"
+	"fmt"
 	"github.com/codegangsta/cli"
 	"io"
 	"log"
@@ -41,6 +42,7 @@ var logger *log.Logger
 func checkResource(c *cli.Context) {
 	logger = log.New(os.Stdout, "error: ", 0)
 	filepath := c.String("file")
+	success := true
 
 	if filepath == "" {
 		logger.Fatal("No file passed")
@@ -75,10 +77,14 @@ func checkResource(c *cli.Context) {
 			metaReader, err := file.Open()
 			if err != nil {
 				logger.Println("could not open meta.xml file")
+				success = false
 				continue
 			}
 
-			checkMeta(metaReader)
+			if !checkMeta(metaReader) {
+				success = false
+			}
+
 			metaReader.Close()
 			continue
 		}
@@ -86,11 +92,17 @@ func checkResource(c *cli.Context) {
 		ext := fpath.Ext(filename)
 		if (ext == ".exe") || (ext == ".com") || (ext == ".bat") {
 			logger.Printf("contains blocked file %s\n", filename)
+			success = false
 		}
 	}
 
 	if !hasMeta {
 		logger.Println("missing meta.xml file")
+		return
+	}
+
+	if success {
+		fmt.Println("ok")
 	}
 }
 
