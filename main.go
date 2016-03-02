@@ -125,7 +125,10 @@ func checkMeta(file io.ReadCloser) (success bool) {
 	}
 
 	info := meta.Infos[0]
-	if (info.Type != "gamemode") && (info.Type != "map") && (info.Type != "script") && (info.Type != "misc") {
+	if info.Type == "" {
+		logger.Println("meta.xml is missing the 'type' field")
+		return
+	} else if (info.Type != "gamemode") && (info.Type != "map") && (info.Type != "script") && (info.Type != "misc") {
 		logger.Println("meta.xml has an invalid 'type' field")
 		return
 	}
