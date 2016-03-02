@@ -39,8 +39,7 @@ func main() {
 var logger *log.Logger
 
 func checkResource(c *cli.Context) {
-	logger = log.New(os.Stderr, "error: ", 0)
-	logger.SetOutput(os.Stdout)
+	logger = log.New(os.Stdout, "error: ", 0)
 	filepath := c.String("file")
 
 	if filepath == "" {

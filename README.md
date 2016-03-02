@@ -1,4 +1,4 @@
-# mta-communitycli
+# mtacommunity-cli
 
 CLI for the new mta community
 
