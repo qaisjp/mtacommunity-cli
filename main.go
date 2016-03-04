@@ -12,10 +12,9 @@ import (
 	"regexp"
 )
 
-//--  f = io.popen("mta-communitycli check --file=meta.zip"); print(f:read("*all"))
 func main() {
 	app := cli.NewApp()
-	app.Name = "Community CLI"
+	app.Name = "MTA Community CLI"
 	app.Version = "1.0.0"
 	app.Author = "Qais \"qaisjp\" Patankar"
 	app.Email = "qaisjp@gmail.com"
@@ -67,6 +66,7 @@ func checkResource(c *cli.Context) {
 
 	// Do they have a meta file?
 	hasMeta := false
+	var meta XMLMeta
 
 	for _, file := range reader.File {
 		fileInfo := file.FileInfo()
@@ -81,7 +81,9 @@ func checkResource(c *cli.Context) {
 				continue
 			}
 
-			if !checkMeta(metaReader) {
+			var result bool
+			result, meta = checkMeta(metaReader)
+			if !result {
 				success = false
 			}
 
@@ -102,7 +104,7 @@ func checkResource(c *cli.Context) {
 	}
 
 	if success {
-		fmt.Println("ok")
+		fmt.Printf(`ok {version: "%s", type: "%s", name: "%s"}`, meta.Infos[0].Version, meta.Infos[0].Type, meta.Infos[0].Name)
 	}
 }
 
@@ -117,8 +119,7 @@ type XMLMeta struct {
 	Infos []XMLInfo `xml:"info"`
 }
 
-func checkMeta(file io.ReadCloser) (success bool) {
-	var meta XMLMeta
+func checkMeta(file io.ReadCloser) (success bool, meta XMLMeta) {
 
 	// TODO - THIS IS NOT "STRICT" ENOUGH
 	// TRY PREPENDING THE XML FILE WITH "jasjdsd"
