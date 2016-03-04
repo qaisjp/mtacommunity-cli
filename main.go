@@ -104,7 +104,7 @@ func checkResource(c *cli.Context) {
 	}
 
 	if success {
-		fmt.Printf(`ok {version: "%s", type: "%s", name: "%s"}`, meta.Infos[0].Version, meta.Infos[0].Type, meta.Infos[0].Name)
+		fmt.Printf(`ok {"version": "%s", "type": "%s", "name": "%s"}`, meta.Infos[0].Version, meta.Infos[0].Type, meta.Infos[0].Name)
 	}
 }
 
