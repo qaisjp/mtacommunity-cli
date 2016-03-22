@@ -120,11 +120,6 @@ type XMLMeta struct {
 }
 
 func checkMeta(file io.ReadCloser) (success bool, meta XMLMeta) {
-
-	// TODO - THIS IS NOT "STRICT" ENOUGH
-	// TRY PREPENDING THE XML FILE WITH "jasjdsd"
-	// GOLANG WILL BE ABLE TO READ THE SYNTACTICALLY INCORRECT FILE
-	// MTA:SA CANNOT
 	decoder := xml.NewDecoder(file)
 	err := decoder.Decode(&meta)
 	if err != nil {
@@ -149,7 +144,10 @@ func checkMeta(file io.ReadCloser) (success bool, meta XMLMeta) {
 	if info.Version == "" {
 		logger.Println("meta.xml is missing the version field for <info>")
 		return
-	} else if versionSuccess, _ := regexp.MatchString(`^(\d\.\d\.\d|\d\.\d|\d)$`, info.Version); !versionSuccess {
+	}
+
+	versionSuccess, _ := regexp.MatchString(`^(\d\.\d\.\d|\d\.\d|\d)$`, info.Version)
+	if !versionSuccess {
 		logger.Println("meta.xml contains a malformed version field (should be in the form X, X.X, or X.X.X)")
 		return
 	}
